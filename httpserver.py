@@ -1,26 +1,25 @@
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
 import socket
 import requests
-
+import logging
 
 def main():
+    logging.basicConfig(level=logging.DEBUG)
     for i in range(len(sys.argv)):
         if sys.argv[i] == "-p":
             PORT = int(sys.argv[i+1])
         elif sys.argv[i] == "-o":
             ORIGIN = sys.argv[i+1]
-    ORIGIN = "http://cs5700cdnorigin.ccs.neu.edu"
-    
+    #ORIGIN = "http://cs5700cdnorigin.ccs.neu.edu"
     create(PORT)
 
 
 
 def create(port:int) -> HTTPServer:
-    webServer = HTTPServer((getLocalIp, port), getHandler)
+    webServer = HTTPServer((getLocalIp(), port), getHandler)
+    logging.info(f"listening on {getLocalIp()}:{port}")
     webServer.serve_forever()
-
 
 class getHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -28,7 +27,7 @@ class getHandler(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
         try:
-            re = requests.get("http://cs5700cdnorigin.ccs.neu.edu:8080")
+            re = requests.get(f"http://cs5700cdnorigin.ccs.neu.edu:8080{self.path}")
             self.wfile.write(bytes(re.content))
         except Exception:
             self.wfile.write(bytes(b"request to origin failed"))
