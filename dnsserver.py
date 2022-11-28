@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Strategy: Always origin"""
 import argparse
 import logging
 import socket
