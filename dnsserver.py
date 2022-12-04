@@ -11,7 +11,6 @@ import json
 from urllib.request import urlopen
 from math import radians, cos, sin, asin, sqrt, inf
 import geoip2.database
-import yappi
 
 def get_ip_address():
     """Get local IP address.
