@@ -11,4 +11,4 @@ done
 dns_server="proj4-dns.5700.network"
 echo "Deploying to $dns_server"
 scp dnsserver/dnsserver dnsserver/GeoLite2-City.mmdb dkgp@$dns_server: 
-ssh dkgp@$dns_server  "pip3 install -U geoip2 && chmod u+x dnsserver"
+ssh dkgp@$dns_server  "pip3 install -U geoip2 dnslib && chmod u+x dnsserver"

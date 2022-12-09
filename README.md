@@ -1,18 +1,43 @@
-CS5700 - Project4: CDN
+# CS5700 - Project4: CDN
 
-Collaborators: Alan Garcia, Dhruvam K, Gowtham Potnuru
+## Collaborators
 
-High Level Approach:
+1. Alan Garcia
+2. Dhruvam Kothari
+3. Gowtham Potnuru
+
+## High Level Approach
 
 The CDN project contains 2 components, the DNS Server and the HTTP Server. The DNS server is responsible to statically assign an IP address to a client's query.
 The HTTP server is responsible to serve content from the origin or from the cache.
-We identified that for a faster CDN, the rtt has to be the least between the client and the http server. For this to happen, the client should be mapped to the 
-best possible replica server and also we have to reduce the dependency of the origin server which increase the rtt.
-Keep these 2 things in mind, we came up with a strategy to design a fast CDN. 
 
-Features:
+### DNS Server
 
-DNS Server
+We used a combination of two approaches
+
+1. Geolocation based routing
+2. Active measurement using scamper
+
+The algorithm for an incoming client the DNS server is as follows:
+
+1. Is the client in `ROUTING_TABLE`? Then:
+    1. Return best replica server IP address based on average latency.
+2. Else:
+    1. Use geolocation based routing to find the closest replica server by haversine distance.
+    2. Store client ip address in a set `CLIENTS`
+
+The `ROUTING_TABLE` is update periodically by pinging the `/ping` endpoint of the HTTP server. The `/ping` endpoint returns the latency between the `CLIENTS` and the replica server.
+
+## HTTP Server
+
+1. Model the cache as a 0/1 Knapsack problem and calculate optimal disk and RAM cache.
+2. Use Brotli compression to compress individual files and store them in disk/ directory.
+3. Expose a `/preload` endpoint to store the compressed files in RAM. As mentioned before, the preload_files for RAM have been precomputed.
+
+## Features
+
+### DNS Server
+
 - The DNS server address the issue of statically assigning an IP address of the replica servers. Choosing a replica server plays a major role
 in the rtt of a request from the client.
 - To minimize this, a new client is assigned to a geographically closest server. The IP address of a client is translated to location coordinates and compared with
@@ -22,44 +47,45 @@ replica server coordinates.
 - An HTTP endpoint is exposed at every replica server through which the active measurement takes place.
 We also used native parsers for the DNS protocol to speed up the CDN.
 
-HTTP Server
-- The HTTP server address the issue of serving the content rapidly to the client. The origin server contains the whole dataset and each of the replicas contain part of the data (20MB) which acts as a cache.
-- Inorder to minize the rtt, it is important to have high hit rate. There are 2 parts to this, to imrpove the hit rate the initial data preloaded into the cache matters.
-- We tried to fill the cache considering 2 factors - popularity of the wesbites and the size of the content. It is like solving a knapsack problem.
-- Once the cache is preloaded, if there is a cache miss the content is replaces using the LFU strategy. The least frequenctly used content is replaced with the new content.
-- Another optimization is loading more content into the cache which increases the hit rate. 
- So we used Brotli compression to compress the web content and store more data inside the cache.
-- Another important feature of the HTTP server is the continuous active measurement which helps the DNS to map best replica servers. The DNS server hits the /ping endpoint to which activcates the scamper.
-We use scamper to measure the latency between the replica server and the clients. The data collected is returned to the DNS server.
+### HTTP Server
 
-Deployment:
+- About 90% cache hit rate is achieved by using a combination of disk and RAM cache.
+- Small server binary size of <2MB, allowing more disk cache. This is achieved by optimizing the binary for size and compressing it with `upx`.
 
+## Deployment
+
+- See `make deploy` in the Makefile.
 - For deployment we have 3 different scripts, DEPLOY | RUN | STOP
 - These scripts enable us to remotely deploy the CDN and run them
-- We copy the CDN relate files remotely which is the DNS files to the DNS server and HTTP SERVER files to the replica servers. 
+- We copy the CDN relate files remotely which is the DNS files to the DNS server and HTTP SERVER files to the replica servers.
 - We configure each of the servers and start.
 
-Challenges:
+## Challenges
 
 - One of the main challenged was in architecting the CDN to do active measurements which uses HTTP endpoints.
 - Another challenge was the geolocation based routing where we had to figure the DB to use and the formula to find the distance.
-- The use of SCAMPER for active measurement required some detail.
-- Another big issue was the tradeoff between compression size and decompression times. We had to evaluate the rtt from the origin and decompression times from the disk.
+- The use of `scamper` for active measurement required some detail.
+- Tradeoff of size/speed for compression. We initially achieved a 95% hit rate using aggressive compression, however the decompression times were about 1s, which was slower than fetching from origin.
+- Our initial implementation of async http server with brotli used about 50MB disk space as libraries, hence we had to rewrite it in rust.
+- We could achieve 93% hit rate by providing a custom dictionary for brotli compression. However, we could not implement it optimally in rust due to lack of easy library support.
 
-Contribution:
+## Contribution
 
-Alan Garcia
+### Alan Garcia
+
 - Basic HTTP server setup
 - Use of SCAMPER and active measurement
 - Deploy scripts
 
-Dhruvam Kothari
+### Dhruvam Kothari
+
 - DNS setup
-- HTTP server cache implementation 
+- HTTP server implementation
 - Compression of data
 - Optimizing latency and cache hit rate
 
-Gowtham Potnuru
+### Gowtham Potnuru
+
 - Resolving IP's for client based on geogrpahy and active measurements.
 - Update client and replica server mapping
 - Testing DNS and HTTP Server
