@@ -13,6 +13,7 @@ lazy_static! {
     static ref ORIGIN: RwLock<String> = RwLock::new(String::new());
 }
 
+/// Main function for the server, configures endpoints and parses cli.
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {
@@ -52,6 +53,8 @@ async fn main() {
         .with(warp::log("server"));
     warp::serve(routes).run(([0, 0, 0, 0], port)).await;
 }
+
+/// Ping endpoint, calls scamper and returns the result.
 async fn ping(ip_list: String) -> Result<impl warp::Reply, warp::Rejection> {
     let scamper = std::process::Command::new("scamper")
         .args(["-i", "-O", "json", "-c", "ping -c 1"])
@@ -69,6 +72,8 @@ async fn ping(ip_list: String) -> Result<impl warp::Reply, warp::Rejection> {
     }
 }
 
+/// Proxy endpoint, fetches the content from the origin and returns it.
+/// Retries request every 10s if server error.
 async fn fetch_from_origin(path: &str) -> String {
     log::debug!("Fetching from origin: {}", path);
     let url = format!("{}/{}", ORIGIN.read().await, path);
@@ -90,6 +95,7 @@ async fn fetch_from_origin(path: &str) -> String {
     return response.text().await.unwrap();
 }
 
+/// Preload endpoint, fetches the content from the origin and caches it in RAM.
 async fn preload(body: String) -> Result<impl warp::Reply, warp::Rejection> {
     tokio::spawn(async move {
         for path in body.split(";").filter(|&x| x != "").map(|x| x.to_string()) {
@@ -111,6 +117,7 @@ async fn preload(body: String) -> Result<impl warp::Reply, warp::Rejection> {
     Ok(StatusCode::NO_CONTENT)
 }
 
+/// Brotli compresses the content.
 async fn compress(content: String) -> Vec<u8> {
     brotli::CompressorReader::new(content.as_bytes(), BUFFER_SIZE, 11, 22)
         .bytes()
@@ -118,6 +125,7 @@ async fn compress(content: String) -> Vec<u8> {
         .collect()
 }
 
+/// Brotli decompresses the content.
 async fn decompress(content: &Vec<u8>) -> String {
     let mut decompressed = String::new();
     brotli::Decompressor::new(&content[..], BUFFER_SIZE)
@@ -126,6 +134,8 @@ async fn decompress(content: &Vec<u8>) -> String {
     decompressed
 }
 
+/// Proxy endpoint, looks item in cache, if cache miss fetch from origin.
+/// Cache is only read and never written.
 async fn proxy(path: String) -> Result<impl warp::Reply, warp::Rejection> {
     if let Ok(ram_cache) = RAM_CACHE.try_read() {
         if let Some(compressed) = ram_cache.get(&path) {
