@@ -15,6 +15,7 @@ from urllib.request import urlopen
 from math import radians, cos, sin, asin, sqrt, inf
 import geoip2.database
 
+PING_REPLICA_SERVERS_FREQUENCY = 100
 ORIGIN = "cs5700cdnorigin.ccs.neu.edu"
 ORIGIN_IP = socket.gethostbyname(ORIGIN)
 
@@ -24,8 +25,6 @@ CLIENTS = set()
 CLIENT_REPLICA_ROUTING_TABLE = defaultdict(
     lambda: defaultdict(lambda: {
         "sum": 0,
-        "min": inf,
-        "max": -1,
         "samples": 0
     }))
 
@@ -53,8 +52,6 @@ def get_ip_address():
     return s.getsockname()[0]
 
 
-UPDATE_ROUTING_TABLE_FREQUENCY = 300
-PING_REPLICA_SERVERS_FREQUENCY = 100
 
 # maps the geographically closest repliva server to the client
 def find_closest_replica_server(source_ip):
@@ -161,10 +158,6 @@ def update_latency(output):
     replica = output["src"]
     latency = output["statistics"]["avg"]
     CLIENT_REPLICA_ROUTING_TABLE[client][replica]["sum"] += latency
-    CLIENT_REPLICA_ROUTING_TABLE[client][replica]["min"] = min(
-        latency, CLIENT_REPLICA_ROUTING_TABLE[client][replica]["min"])
-    CLIENT_REPLICA_ROUTING_TABLE[client][replica]["max"] = max(
-        latency, CLIENT_REPLICA_ROUTING_TABLE[client][replica]["max"])
     CLIENT_REPLICA_ROUTING_TABLE[client][replica]["samples"] += 1
 
 
