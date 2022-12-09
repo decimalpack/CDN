@@ -127,7 +127,6 @@ async fn decompress(content: &Vec<u8>) -> String {
 }
 
 async fn proxy(path: String) -> Result<impl warp::Reply, warp::Rejection> {
-    // tokio::time::sleep(std::time::Duration::from_millis(1314)).await;
     if let Ok(ram_cache) = RAM_CACHE.try_read() {
         if let Some(compressed) = ram_cache.get(&path) {
             log::info!("RAM hit {}", path);
