@@ -45,3 +45,21 @@ Challenges:
 - Another challenge was the geolocation based routing where we had to figure the DB to use and the formula to find the distance.
 - The use of SCAMPER for active measurement required some detail.
 - Another big issue was the tradeoff between compression size and decompression times. We had to evaluate the rtt from the origin and decompression times from the disk.
+
+Contribution:
+
+Alan Garcia
+- Basic HTTP server setup
+- Use of SCAMPER and active measurement
+- Deploy scripts
+
+Dhruvam Kothari
+- DNS setup
+- HTTP server cache implementation 
+- Compression of data
+- Optimizing latency and cache hit rate
+
+Gowtham Potnuru
+- Resolving IP's for client based on geogrpahy and active measurements.
+- Update client and replica server mapping
+- Testing DNS and HTTP Server
