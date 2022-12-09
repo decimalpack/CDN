@@ -24,7 +24,7 @@ REPLICA_SERVERS=("proj4-repl1.5700.network" "proj4-repl2.5700.network" "proj4-re
 preload=`cat ./preload_files.txt|tr '\n' ';'`
 for repl in "${REPLICA_SERVERS[@]}"
 do
-	ssh -i $KEYFILE $SERVERUSER@$repl "screen -d -m ./httpserver -p $PORT -o http://cs5700cdnorigin.ccs.neu.edu:8080/" 
+	ssh -i $KEYFILE $SERVERUSER@$repl "screen -d -m ./httpserver -p $PORT -o $ORIGIN" 
 	echo "Preloading $repl"
 	sleep 0.5s # wait for server to start
 	curl --data $preload $repl:25015/preload
@@ -33,4 +33,4 @@ echo "Allow 10 minutes for cache to warm up."
 
 dns_server="proj4-dns.5700.network"
 echo "Running $dns_server"
-ssh $SERVERUSER@$dns_server  "screen -d -m ./dnsserver -p $PORT -n dc"
+ssh -i $KEYFILE $SERVERUSER@$dns_server  "screen -d -m ./dnsserver -p $PORT -n $NAME"
