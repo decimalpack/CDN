@@ -5,7 +5,7 @@ for repl in "${REPLICA_SERVERS[@]}"
 do
 	ssh -i ~/.ssh/id_ed25519 dkgp@$repl "screen -d -m ./httpserver -p 25015 -o http://cs5700cdnorigin.ccs.neu.edu:8080/" 
 	echo "Preloading $repl"
-	sleep 0.1s # wait for server to start
+	sleep 0.5s # wait for server to start
 	curl --data $preload $repl:25015/preload
 done
 echo "Allow 10 minutes for cache to warm up."
