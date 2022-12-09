@@ -98,6 +98,10 @@ def find_location_coordinates(ip):
 
 # maps a client to a replica server based on geography and active measurement strategies
 def resolve(client_address: Tuple[str, int]) -> str:
+    def delay_ping():
+        """Delay ping to avoid blocking the resolve function."""
+        CLIENTS.add(client_ip)
+        ping_replica_servers([client_ip])
     client_ip = client_address[0]
 
     if client_ip in CLIENT_REPLICA_ROUTING_TABLE:
@@ -106,8 +110,7 @@ def resolve(client_address: Tuple[str, int]) -> str:
                 replica_ip]["samples"]
         return min(CLIENT_REPLICA_ROUTING_TABLE[client_ip], key=avg)
     else:
-        CLIENTS.add(client_ip)
-        ping_replica_servers([client_ip])
+        threading.Thread(target=delay_ping).start()
         return find_closest_replica_server(client_ip)
 
 def parse_args():
