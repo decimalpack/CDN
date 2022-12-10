@@ -23,7 +23,7 @@ REPLICA_SERVERS=("proj4-repl1.5700.network" "proj4-repl2.5700.network" "proj4-re
 dns_server="proj4-dns.5700.network"
 for repl in "${REPLICA_SERVERS[@]}"
 do
-	echo "Stoppping $repl"
+	echo "Stopping $repl"
 	ssh -i $KEYFILE $SERVERUSER@$repl "pkill -u $SERVERUSER httpserver"
 done
 echo "Stopping $dns_server"

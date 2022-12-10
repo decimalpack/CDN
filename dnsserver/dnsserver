@@ -15,7 +15,7 @@ from urllib.request import urlopen
 from math import radians, cos, sin, asin, sqrt, inf
 import geoip2.database
 
-PING_REPLICA_SERVERS_FREQUENCY = 100
+PING_REPLICA_SERVERS_FREQUENCY = 20
 ORIGIN = "cs5700cdnorigin.ccs.neu.edu"
 ORIGIN_IP = socket.gethostbyname(ORIGIN)
 
