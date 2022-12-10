@@ -13,7 +13,6 @@ Xi_Jinping
 World_War_II
 Ukraine
 Game_of_Thrones
-World_War_I
 Cat
 Emmett_Till
 Twitter
@@ -34,7 +33,6 @@ Keanu_Reeves
 Diana,_Princess_of_Wales
 Periodic_table
 Real_Madrid_CF
-Android_(operating_system)
 Doctor_Who
 MacOS
 Brad_Pitt
@@ -67,10 +65,8 @@ Chola_dynasty
 Jordan_Peterson
 Steve_Jobs
 Scarlett_Johansson
-Arnold_Schwarzenegger
 Mehmet_Oz
 Generation_Z
-BTS
 FC_Barcelona
 Freddie_Mercury
 FIFA_World_Cup
@@ -118,7 +114,6 @@ Tupac_Shakur
 2022_Atlantic_hurricane_season
 Jennifer_Connelly
 Mia_Farrow
-Philadelphia_Phillies
 Seven_deadly_sins
 Paul_Newman
 K.G.F:_Chapter_2
@@ -139,7 +134,6 @@ Nanjing_Massacre
 Harry_Potter
 Linux
 Colonel_Tom_Parker
-Robin_Williams
 David_Tennant
 Mark_Wahlberg
 Keir_Starmer
@@ -197,7 +191,6 @@ Tom_Hardy
 Microsoft_365
 Lizzo
 Top_Gun
-Kevin_Spacey
 Chris_Hemsworth
 Rick_and_Morty
 Timothée_Chalamet
@@ -228,12 +221,10 @@ Matthew_McConaughey
 Alec_Baldwin
 Charlize_Theron
 Daniel_Craig
-Mark_Zuckerberg
 John_Carpenter
 The_Sandman_(TV_series)
 Adam_Sandler
 List_of_The_Walking_Dead_episodes
-Jim_Carrey
 Columbus_Day
 Cillian_Murphy
 AC_Omonia
@@ -258,6 +249,7 @@ Alan_Rickman
 Trevor_Noah
 Daniel_Radcliffe
 Elizabeth_Holmes
+Ryan_Gosling
 Svante_Pääbo
 Suriya
 Steve_Carell
@@ -269,7 +261,6 @@ Human_Development_Index
 Chris_Martin
 2022–23_Premier_League
 Jenna_Ortega
-Interstellar_(film)
 Megan_Thee_Stallion
 Freemasonry
 Jeff_Bridges
