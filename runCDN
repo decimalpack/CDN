@@ -29,8 +29,8 @@ do
 	sleep 0.5s # wait for server to start
 	curl --data $preload $repl:25015/preload
 done
-echo "Allow 20 minutes for cache to warm up."
-
 dns_server="proj4-dns.5700.network"
 echo "Running $dns_server"
 ssh -i $KEYFILE $SERVERUSER@$dns_server  "screen -d -m ./dnsserver -p $PORT -n $NAME"
+echo "Allow 20 minutes for cache to warm up."
+sleep 25m
