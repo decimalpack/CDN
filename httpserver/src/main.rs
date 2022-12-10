@@ -1,5 +1,6 @@
 use futures::{self, FutureExt};
 use lazy_static::lazy_static;
+use log;
 use pretty_env_logger;
 use std::{collections::HashMap, io::Read};
 use tokio::sync::RwLock;
@@ -17,7 +18,7 @@ lazy_static! {
 #[tokio::main]
 async fn main() {
     if std::env::var_os("RUST_LOG").is_none() {
-        std::env::set_var("RUST_LOG", "server=info");
+        std::env::set_var("RUST_LOG", "info");
     }
     pretty_env_logger::init_timed();
 
