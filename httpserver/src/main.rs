@@ -57,10 +57,11 @@ async fn main() {
 
 /// Ping endpoint, calls scamper and returns the result.
 async fn ping(ip_list: String) -> Result<impl warp::Reply, warp::Rejection> {
-    let scamper = std::process::Command::new("scamper")
+    let scamper = tokio::process::Command::new("scamper")
         .args(["-i", "-O", "json", "-c", "ping -c 1"])
         .args(ip_list.split_whitespace())
-        .output();
+        .output()
+        .await;
     match scamper {
         Ok(output) => Ok(warp::reply::with_status(
             String::from_utf8_lossy(&output.stdout).to_string(),
