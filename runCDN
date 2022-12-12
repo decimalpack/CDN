@@ -33,4 +33,4 @@ dns_server="proj4-dns.5700.network"
 echo "Running $dns_server"
 ssh -i $KEYFILE $SERVERUSER@$dns_server  "screen -d -m ./dnsserver -p $PORT -n $NAME"
 echo "Allow 20 minutes for cache to warm up."
-sleep 25m
+sleep 15m
