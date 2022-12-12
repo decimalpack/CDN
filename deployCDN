@@ -25,7 +25,7 @@ do
 	echo "Deploying to $repl"
 	ssh -i $KEYFILE $SERVERUSER@$repl "rm -rf  .cache .config .local .bash_history" 
 	scp -i $KEYFILE -r httpserver/httpserver $SERVERUSER@$repl: 
-	rsync -e "ssh -i $KEYFILE" -a --delete httpserver/disk/ $SERVERUSER@$repl:disk/  &
+	rsync -e "ssh -i $KEYFILE" -a --delete httpserver/disk/ $SERVERUSER@$repl:disk/  
 done
 
 dns_server="proj4-dns.5700.network"
