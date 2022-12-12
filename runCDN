@@ -26,7 +26,7 @@ for repl in "${REPLICA_SERVERS[@]}"
 do
 	ssh -i $KEYFILE $SERVERUSER@$repl "screen -d -m ./httpserver -p $PORT -o $ORIGIN" &
 	echo "Preloading $repl"
-	sleep 0.2s
+	sleep 0.5s
 	curl -s --data $preload $repl:$PORT/preload
 done
 dns_server="proj4-dns.5700.network"
