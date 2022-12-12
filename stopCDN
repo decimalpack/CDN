@@ -24,8 +24,8 @@ dns_server="proj4-dns.5700.network"
 for repl in "${REPLICA_SERVERS[@]}"
 do
 	echo "Stopping $repl"
-	ssh -i $KEYFILE $SERVERUSER@$repl "pkill -u $SERVERUSER httpserver"
+	ssh -i $KEYFILE $SERVERUSER@$repl "pkill -u $SERVERUSER httpserver" &
 done
 echo "Stopping $dns_server"
-ssh -i $KEYFILE $SERVERUSER@$dns_server  "pkill -u $SERVERUSER dnsserver"
-exit 0
+ssh -i $KEYFILE $SERVERUSER@$dns_server  "pkill -u $SERVERUSER dnsserver" &
+sleep 3s

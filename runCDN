@@ -24,10 +24,10 @@ REPLICA_SERVERS=("proj4-repl1.5700.network" "proj4-repl2.5700.network" "proj4-re
 preload=`cat ./preload_files.txt|tr '\n' ';'`
 for repl in "${REPLICA_SERVERS[@]}"
 do
-	ssh -i $KEYFILE $SERVERUSER@$repl "screen -d -m ./httpserver -p $PORT -o $ORIGIN" 
+	ssh -i $KEYFILE $SERVERUSER@$repl "screen -d -m ./httpserver -p $PORT -o $ORIGIN" &
 	echo "Preloading $repl"
-	sleep 0.5s # wait for server to start
-	curl --data $preload $repl:25015/preload
+	sleep 0.2s
+	curl -s --data $preload $repl:$PORT/preload &
 done
 dns_server="proj4-dns.5700.network"
 echo "Running $dns_server"

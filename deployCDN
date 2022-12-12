@@ -23,12 +23,12 @@ REPLICA_SERVERS=("proj4-repl1.5700.network" "proj4-repl2.5700.network" "proj4-re
 for repl in "${REPLICA_SERVERS[@]}"
 do
 	echo "Deploying to $repl"
-	ssh -i $KEYFILE $SERVERUSER@$repl "rm -rf  .cache .config .local .bash_history"
-	scp -i $KEYFILE -r httpserver/httpserver $SERVERUSER@$repl:
-	rsync -e "ssh -i $KEYFILE" -a --delete httpserver/disk/ $SERVERUSER@$repl:disk/ 
+	ssh -i $KEYFILE $SERVERUSER@$repl "rm -rf  .cache .config .local .bash_history" &
+	scp -i $KEYFILE -r httpserver/httpserver $SERVERUSER@$repl: &
+	rsync -e "ssh -i $KEYFILE" -a --delete httpserver/disk/ $SERVERUSER@$repl:disk/  &
 done
 
 dns_server="proj4-dns.5700.network"
 echo "Deploying to $dns_server"
-scp dnsserver/dnsserver dnsserver/GeoLite2-City.mmdb $SERVERUSER@$dns_server: 
+scp dnsserver/dnsserver dnsserver/GeoLite2-City.mmdb $SERVERUSER@$dns_server:
 ssh -i $KEYFILE $SERVERUSER@$dns_server  "pip3 install -U geoip2 && chmod u+x dnsserver"
